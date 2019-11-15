@@ -24,7 +24,8 @@ Check number of files in folders
 ## 3. Image augmentation
 Image augmentation is a creation of additional training data based on existing images, for example translation, rotation, flips and zoom.
 
-``` img_gen = ImageDataGenerator(  
+```python
+img_gen = ImageDataGenerator(  
         rotation_range=40,   
         width_shift_range=0.2,   
         height_shift_range=0.2,    
