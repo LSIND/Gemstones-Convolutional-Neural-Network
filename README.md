@@ -40,7 +40,7 @@ table_images=soup.find_all('table',{'id':'ctl00_ContentPlaceHolder1_DataList1'})
 
 ## 2. Create Train and Test sets
 
-`pip install split_folders`
+`pip install split_folders`   
 Split all images into train and test data
 ```python
 split_folders.ratio('input', output="data", seed=1337, ratio=(.8, .2))
@@ -53,8 +53,8 @@ Check number of files in folders:
 \data\val\Amber: filecount: 3
 ```
 
-
-FULL DATASET OF GEMSTONES IMAGES CAN BE FOUND AT MY KAGGLE PAGE: it's already devided by train and test data
+FULL DATASET OF GEMSTONES IMAGES CAN BE FOUND AT [MY KAGGLE PAGE](https://www.kaggle.com/lsind18/gemstones-images): it's already devided by train and test data.  
+For each class, there are about 10-50 photos. Photos are about 300 x 300 pixels and are not reduced to a single size.
 
 ## 2. Install libraries
 
@@ -62,20 +62,18 @@ for building the simpliest neural network we need to install:
 `pip install tensorflow`  
 `pip install keras`  
 
+## *install CUDA (optional)*
+If you want to train your neural network on GPU check first your [GPU capability](https://developer.nvidia.com/cuda-gpus).   
+*I tested on nvidia geforce gtx 1060 6Gb*   
+Install the [NVIDIA® CUDA® Toolkit](https://developer.nvidia.com/cuda-toolkit) for running scripts on a GPU-accelerated system and the [NVIDIA CUDA® Deep Neural Network library (cuDNN)](https://developer.nvidia.com/cudnn) which is a GPU-accelerated library of primitives for deep neural networks.  
 
-
-## install CUDA (add)
-If you have an NVIDIA card............
-install libraries
-NVIDIA CUDA
-NVIDIA cuDNN
-
+Enable GPU support for tensorflow:  
 `pip install tensorflow-gpu`  
-
 
 
 ## 3. Image augmentation
 Image augmentation is a creation of additional training data based on existing images, for example translation, rotation, flips and zoom.
+Using Keras [create 20 additional images of each gemstone class](https://github.com/LSIND/Gemstones-Neural-Network/blob/master/3_images_augm.py). Files are written to disk! You can write them to memory.
 
 ```python
 img_gen = ImageDataGenerator(  
@@ -87,6 +85,12 @@ img_gen = ImageDataGenerator(
         horizontal_flip=True,    
         fill_mode='nearest')
 ```
-        
 
 ## 4. Build simple CNN
+CNN (Convolutional neural network or ConvNet) is a class of deep neural networks, commonly applied to analyzing visual imagery. Here is the simpliest example of CNN with a few layers.
+```python
+from keras.models import Sequential
+```
+Hyperparameters are as follows:
+- 
+
