@@ -17,7 +17,7 @@ Install packages:
 *Beautiful Soup (bs4)* = Python library for pulling data out of HTML and XML files.
 *requests* = HTTP library
 
-### [Example of downloading static content](fetch_data.py):
+### [Parse static content](fetch_data.py):
 Scraping [minerals.net](https://www.minerals.net) website:
 1. Get the page with [list of all gemstones](https://www.minerals.net/GemStoneMain.aspx) and find HTML-element with them:
 ```python
@@ -33,7 +33,7 @@ table_gems=soup.find_all('table',{'id':'ctl00_ContentPlaceHolder1_DataList1'})
 table_images=soup.find_all('table',{'id':'ctl00_ContentPlaceHolder1_DataList1'})
 ```
 
-### [Example of downloading dynamic content](fetch_data2.py) using `selenium`:
+### [Parse dynamic content](fetch_data2.py) using `selenium`:
 
 `from selenium import webdriver`
 
