@@ -32,7 +32,7 @@ def download_images(key, value):
     gem_link = gems+value
     print(gem_link)
 
-    wd = webdriver.Chrome("C:\\Users\\DVChemkaeva\\Downloads\\chromedriver_win32\\chromedriver.exe")
+    wd = webdriver.Chrome("....\\chromedriver_win32\\chromedriver.exe") # put a path of your webdriver. here is Chrome
     wd.get(gem_link)
     wait = WebDriverWait(wd,15)
     try:
