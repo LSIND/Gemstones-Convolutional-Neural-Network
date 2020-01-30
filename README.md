@@ -1,29 +1,31 @@
 # Gemstones Neural Network - multiclass classification
 
-Can your program understand is it Ruby, Amethyst or smth else?
+Can your program understand is it Ruby, Amethyst or Emerald?
 
 ![Alexandrite](https://www.minerals.net/thumbnail.aspx?image=GemStoneImages/alexandrite-chrysoberyl-brazil-t.jpg&size=120)
 ![Aquamarine](https://www.minerals.net/thumbnail.aspx?image=GemStoneImages/Aquamarine_trillion_cut-thb.jpg&size=120)
 ![Citrine](https://www.minerals.net/thumbnail.aspx?image=GemStoneImages/CITRINE-cushion-thb.jpg&size=120)
 
-> Build a simple convolutional neural network from scratch over the dataset of gemstones images.
+> ### Build a simple convolutional neural network (CNN) from scratch over the dataset of gemstones images.
 
 # I. Create Gemstones Dataset
 > FULL DATASET OF GEMSTONES IMAGES CAN BE FOUND AT [MY KAGGLE PAGE](https://www.kaggle.com/lsind18/gemstones-images): it's already divided into train and test data. This dataset contains 3,000+ images of different gemstones.
 
 ## 1. Download gemstones images
-Fetch data from different sources
+Example of fetching data from different sources in 2 ways: scraping static content and scraping dunamic content.
 
 Install packages:  
-`pip install bs4`  
-`pip install requests`  
-`pip install selenium`
-
-*Beautiful Soup (bs4)* = Python library for pulling data out of HTML and XML files.
-*requests* = HTTP library
+```Console
+pip install bs4 
+pip install requests
+pip install selenium
+```
+*Beautiful Soup (bs4)* = Python library for pulling data out of HTML and XML files.  
+*requests* = HTTP library  
+*selenium* = bindings for Selenium WebDriver; automate web browser interaction from Python.  
 
 ### [Parse static content](1_Fetch_data/fetch_data.py):
-Scraping [minerals.net](https://www.minerals.net) website:
+Example of scraping [minerals.net](https://www.minerals.net) website:
 1. Get the page with [list of all gemstones](https://www.minerals.net/GemStoneMain.aspx) and find HTML-element with them:
 ```python
 url = 'https://www.minerals.net/GemStoneMain.aspx'
@@ -31,16 +33,15 @@ html = requests.get(url).text
 soup = bs(html, 'html.parser')
 table_gems=soup.find_all('table',{'id':'ctl00_ContentPlaceHolder1_DataList1'})
 ```
-3. Parse links to the pages of each gemstone and create dictionary {gemstone name : link }
+2. Parse links to the pages of each gemstone and create dictionary `{gemstone name : link }`
 
-4. Parse each page to get pictures of gemstones
+3. Parse each page to get pictures of gemstones
 ```python
 table_images=soup.find_all('table',{'id':'ctl00_ContentPlaceHolder1_DataList1'})
 ```
 
 ### [Parse dynamic content](1_Fetch_data/fetch_dyn_data.py) using `selenium`:
-
-Scraping [www.rasavgems.com](https://www.rasavgems.com) website.
+Example of scraping [www.rasavgems.com](https://www.rasavgems.com) website. The website uses javascript.
 1. Import webdriver
 ```python
 from selenium import webdriver
@@ -50,16 +51,45 @@ from selenium.webdriver.support.ui import WebDriverWait
 ```python
 wd = webdriver.Chrome("....\\chromedriver_win32\\chromedriver.exe") 
 ```
+3. Get data using automatic interaction
+```python
+element = wait.until(
+        EC.presence_of_element_located((By.ID, "Product_List")))
+        imgs_form = wd.find_element_by_id('Product_List')
+```
+
+We created one folder with subfolders with gemstones pictures inside. They can be checked manually: finally I got 87 classes of gemstones.
 
 ## 2. Create a dataset for NN: Train and Test sets
 
-### 1. Split all images into train and test data: 90%:10%
+### [Rename images](https://github.com/LSIND/Gemstones-Neural-Network/blob/master/1_Fetch_data/2_Rename_Files.py) in Train and Test sets
+
+1. Using `os` module rename files in every folder with name `FolderName_N.extension`. For example, for Ametrine folder rename files as `ametrine_0.jpg`, `ametrine_1.jpg` etc.
+
+2. Avoid common problems: folder iss empty or file with such name already exists.
+```Console
+...
+input\\Chalcedony
+CCOV1520CSCABIOCCMLT-1003_1.jpg                     --> chalcedony_0.jpg
+chalcedony-round-multi-color-ccmlt500x500.jpg       --> chalcedony_1.jpg
+....
+input\\Labradorite
+labradorite-gem-253954a.jpg                         --> labradorite_0.jpg
+...
+```
+
+### [Split images](https://github.com/LSIND/Gemstones-Neural-Network/blob/master/1_Fetch_data/2_Split_to_Train_Test.py) into train and test data: 90% : 10%
+> Train set is used to teach a neural network. Test set is used to check if the neural network understand a gemstone or not.
+
+1. Use [split_folders](https://pypi.org/project/split-folders/)  
 `pip install split_folders`   
 
+This library provides splitting folders with files into train, validation and test (dataset) folders. Split with a ratio to only split into training and validation set `(.9, .1)`.
+
 ```python
-split_folders.ratio('input', output="data", seed=1337, ratio=(.9, .11))
+split_folders.ratio('input', output="data", seed=1337, ratio=(.9, .1))
 ```
-Check number of [files and folders](https://github.com/LSIND/intro-to-python3-analysis/tree/master/CountFilesAndFolders):
+2. [Check number of files and folders](https://github.com/LSIND/intro-to-python3-analysis/tree/master/CountFilesAndFolders/main.py):
 ```Console
 ------------> gemstones-images:  2 folders,  0 files
 --------------> test :   87 folders,  0 files
@@ -72,8 +102,6 @@ Check number of [files and folders](https://github.com/LSIND/intro-to-python3-an
 ----------------> Almandine :    0 folders,  29 files
 ----------------> Amazonite :    0 folders,  28 files
 ```
-
-### 2. Rename images in Train and Test sets
 
 **FULL DATASET OF GEMSTONES IMAGES CAN BE FOUND AT [MY KAGGLE PAGE](https://www.kaggle.com/lsind18/gemstones-images): it's already divided into train and test data. This dataset contains 3,000+ images of different gemstones.**  
 There are 87 classes of different gemstones. The images are in various sizes and are in .jpg format. All gemstones have various shapes - round, oval, square, rectangle, heart.  
@@ -105,7 +133,7 @@ XLA_GPU device: NVIDIA GTX-1060 6GB
 XLA stands for accelerated linear algebra. It's Tensorflow's relatively optimizing compiler that can further speed up ML models.
 
 *I tested on nvidia geforce gtx 1060 6Gb*  
-Run this notebook with GPU mode: every epoch on CPU takes ~3 minutes, on GPU ~ 15 sec.
+Run the code to train CNN with GPU mode: every epoch on CPU takes ~3 minutes, on GPU ~ 15 sec.
 
 ```Python
 from tensorflow.python.client import device_lib
@@ -113,14 +141,9 @@ devices = device_lib.list_local_devices()
 print(devices)
 ```
 
-# III. Preparation steps for building NN
-## 1. Check data 
+# III. Preparation steps for building CNN
 
-Check the number of files in every gemstone class in folder `/input/gemstones-images`. Images are already divided into train (~2,800 images) and test (~400 images) data. Each class in train set contains `27 - 47` images, in test set - `4 - 6` images.
-* create list `CLASSES` which contains the names of 87 classes of gemstones based on folders names
-* plot the distribution of data
-
-## 2. Prepare training data
+## 1. Prepare training data
 
 1.Prepare parameters
 * resize all images to `img_w, img_h` - this option will be used as a parameter of neural network 
@@ -130,8 +153,36 @@ Check the number of files in every gemstone class in folder `/input/gemstones-im
 * read each image from disk
 * import OpenCV (`import cv2`): an image and video processing library  
 * set `COLOR_BGR2RGB` option because opencv reads and displays an image as BGR color format instead of RGB color format. Without this option images will be shown in blue hue because `matplotlib` uses RGB to display image
+
+```Python
+def read_imgs_lbls(_dir):
+    Images, Labels = [], []
+    for root, dirs, files in os.walk(_dir):
+        path = root.split(os.sep)
+        f = os.path.basename(root)
+        for file in files:
+            Labels.append(f)
+            try:
+                image = cv2.imread(root+'/'+file)              # read the image (OpenCV)
+                image = cv2.resize(image,(img_w, img_h))       # resize the image (images are different sizes)
+                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) # converts an image from BGR color space to RGB
+                Images.append(image)
+            except Exception as e:
+                print(str(e))
+    return (Images, Labels)
+```
+
 3. Create function to convert string labels to numbers
 * Convert labels to a list of numbers not words using list `CLASSES`. The index will represent label of class, f.e. *Ruby = 0, Amethyst = 24*, etc.
+
+```Python
+def get_class_index(Labels):
+    for i, n in enumerate(Labels):
+        for j, k in enumerate(CLASSES):    # foreach CLASSES
+            if n == k:
+                Labels[i] = j
+    return Labels
+```
 4. Fill lists of images and labels with data
 * create two lists `Train_Imgs, Train_Lbls = [], []`. `Train_Imgs` list contains `cv2` images and `Train_Lbls` contains classes' names of gemstones.
 * 'Convert' `Train_Lbls` with strings to list with corresponding numbers
@@ -143,11 +194,11 @@ Pass `Train_Imgs, Train_Lbls` to the function `lists_to_np_arr` to convert them 
 6. Plot images
 * Using `matplotlib` and `random` show 16 (4x4) random images from the set and their labels (as string and as number).
 
-## 3. Split data into train and validation sets
+## 2. Split train data into train and validation sets
 * use `sklearn` to split `Train_Imgs`, `Train_Lbls` into train (80%) and validation (20%) sets. **Important!**
 
 
-# IV. Build a Convolutional neural network
+# IV. Build a Convolutional Neural Network
 > for multiclass classification
 
 ## 1. Import keras
