@@ -52,7 +52,7 @@ We created one folder with subfolders with gemstones pictures inside. They can b
 
 ## 2. Create a dataset for NN: Train and Test sets
 
-### [Rename images](https://github.com/LSIND/Gemstones-Neural-Network/blob/master/1_Fetch_data/2_Rename_Files.py) in Train and Test sets
+### [Rename images](https://github.com/LSIND/Gemstones-Neural-Network/blob/master/1_Fetch_data/2_Rename_Files.py) in created folders
 
 1. Using `os` module rename files in every folder with name `FolderName_N.extension`. For example, for Ametrine folder rename files as `ametrine_0.jpg`, `ametrine_1.jpg` etc.
 
