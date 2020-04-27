@@ -5,22 +5,23 @@
 As far as there are not so many samples for every class, add a train data generator using class `ImageDataGenerator` with augmentation parameters. **Image augmentation** is a creation of additional training data based on existing images, for example translation, rotation, flips and zoom. Using `ImageDataGenerator` class from Keras library create additional images of each gemstone class in the memory.
 
 ```python
+from keras.preprocessing.image import ImageDataGenerator
+
 train_datagen = ImageDataGenerator(              # this is the augmentation configuration used for training
-        rescale=1./255,
-    #preprocessing_function=preprocess_input,
         rotation_range=25,
-        zoom_range=0.3,
-        width_shift_range=0.2,
-        height_shift_range=0.2,
+        zoom_range=0.1,
+        width_shift_range=0.1,
+        height_shift_range=0.1,
         shear_range=0.2,
         horizontal_flip=True
         )
 
-val_datagen = ImageDataGenerator(                # for val/testing only rescaling function
-    #preprocessing_function=preprocess_input,
-    rescale=1./255
+val_datagen = ImageDataGenerator()                # for val/testing only rescaling function 
 )
 ```
+
+Example of original (1) + its augmentation:
+![augmented image](https://www.dropbox.com/s/5kjepywtw09p8fg/augm.JPG?raw=1)   
 
 Create two numpy array iterators train_gen and val_gen and fill them with additional images:
 ```python
